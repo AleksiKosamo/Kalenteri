@@ -1,0 +1,10 @@
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\bin\Debug\Kalenteri näyttötyö.exe.config
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\bin\Debug\Kalenteri näyttötyö.exe
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\bin\Debug\Kalenteri näyttötyö.pdb
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\obj\Debug\Kalenteri näyttötyö.csproj.AssemblyReference.cache
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\obj\Debug\Kalenteri_näyttötyö.Form1.resources
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\obj\Debug\Kalenteri_näyttötyö.Properties.Resources.resources
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\obj\Debug\Kalenteri näyttötyö.csproj.GenerateResource.cache
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\obj\Debug\Kalenteri näyttötyö.csproj.CoreCompileInputs.cache
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\obj\Debug\Kalenteri näyttötyö.exe
+C:\Users\s3koal03\Downloads\Kalenteri näyttötyö\Kalenteri näyttötyö\obj\Debug\Kalenteri näyttötyö.pdb
