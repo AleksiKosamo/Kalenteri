@@ -1,0 +1,8 @@
+# Ignored directories
+bin/
+obj/
+.vs/
+
+# Ignored files
+*.dll
+*.exe
