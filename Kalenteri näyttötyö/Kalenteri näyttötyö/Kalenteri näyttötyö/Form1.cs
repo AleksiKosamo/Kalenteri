@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Drawing;
+using System.IO;
 using System.Windows.Forms;
 
 namespace Kalenteri_näyttötyö
@@ -9,12 +10,16 @@ namespace Kalenteri_näyttötyö
         private Timer timer; // Ajastin päivämäärän ja kellonajan päivittämiseen
         private DateTime currentDate; // Nykyinen päivämäärä
         private string[] dayContents; // Taulukko päivien muistiinpanoille
+        private string notesFilePath = "day_notes.txt"; // Tiedostopolku muistiinpanojen tallentamiseen
 
         public kalenteri()
         {
             InitializeComponent();
             currentDate = DateTime.Now; // Asetetaan nykyinen päivämäärä
             dayContents = new string[31]; // Tehdään taulukko, joka tallentaa päivien muistiinpanot
+
+            // Ladataan päivän muistiinpanot tiedostosta
+            LoadDayNotesFromFile();
 
             // Tehdään käyttöliittymä ja lisätään tapahtumankäsittelijät
             ShowDaysBasedOnCurrentMonth();
@@ -28,6 +33,9 @@ namespace Kalenteri_näyttötyö
             timer.Interval = 1000;
             timer.Tick += Timer_Tick;
             timer.Start();
+
+            // Lisätään tapahtumankäsittelijä lomakkeen sulkemiseen
+            this.FormClosing += kalenteri_FormClosing;
         }
 
         // Ajastimen tikin käsittelijä
@@ -186,54 +194,109 @@ namespace Kalenteri_näyttötyö
                 dayContents[day - 1] = newContent;
             }
         }
-    }
 
-    // Luo muistion kirjoittamisen ikkunan
-    public static class Prompt
-    {
-        public static string ShowDialog(string caption, string text, RichTextBox dayBox)
+        // Kirjoittaa päivän muistiinpanot tiedostoon ennen lomakkeen sulkemista
+        private void kalenteri_FormClosing(object sender, FormClosingEventArgs e)
         {
-            Form prompt = new Form();
-            prompt.Width = 300;
-            prompt.Height = 220; // Korotettu korkeus, jotta tekstin syöttöön on enemmän tilaa
-            prompt.Text = caption;
-            Label textLabel = new Label() { Left = 50, Top = 20, Text = "Syötä muistiinpano:" }; // Päivitetty teksti
-            TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 200, Height = 80, Multiline = true }; // Lisätty Multiline ja korotettu korkeus
-            textBox.Text = text;
-            Button confirmation = new Button() { Text = "OK", Left = 50, Width = 100, Top = 140 }; // Päivitetty sijainti
-            confirmation.Click += (sender, e) =>
+            SaveDayNotesToFile();
+        }
+
+        // Luo muistion kirjoittamisen ikkunan
+        public static class Prompt
+        {
+            public static string ShowDialog(string caption, string text, RichTextBox dayBox)
             {
-                if (!string.IsNullOrEmpty(textBox.Text))
+                Form prompt = new Form();
+                prompt.Width = 300;
+                prompt.Height = 220; // Korotettu korkeus, jotta tekstin syöttöön on enemmän tilaa
+                prompt.Text = caption;
+                Label textLabel = new Label() { Left = 50, Top = 20, Text = "Syötä muistiinpano:" }; // Päivitetty teksti
+                TextBox textBox = new TextBox() { Left = 50, Top = 50, Width = 200, Height = 80, Multiline = true }; // Lisätty Multiline ja korotettu korkeus
+                textBox.Text = text;
+                Button confirmation = new Button() { Text = "OK", Left = 50, Width = 100, Top = 140 }; // Päivitetty sijainti
+                confirmation.Click += (sender, e) =>
                 {
-                    // Lisää merkki päivän tekstilaatikkoon, jos muistiinpanolaatikossa on tekstiä
-                    if (!dayBox.Text.Contains("✔"))
+                    if (!string.IsNullOrEmpty(textBox.Text))
                     {
-                        // Insert the checkmark at the end of the existing text
-                        dayBox.SelectionStart = dayBox.TextLength;
-                        dayBox.SelectedText = "✔";
+                        // Lisää merkki päivän tekstilaatikkoon, jos muistiinpanolaatikossa on tekstiä
+                        if (!dayBox.Text.Contains("✔"))
+                        {
+                            // Insert the checkmark at the end of the existing text
+                            dayBox.SelectionStart = dayBox.TextLength;
+                            dayBox.SelectedText = "✔";
+                        }
+                    }
+                    else
+                    {
+                        // Poistaa merkin päivän tekstilaatikosta, jos se on jo lisätty
+                        if (dayBox.Text.Contains("✔"))
+                        {
+                            int index = dayBox.Text.IndexOf("✔");
+                            dayBox.Select(index, 1);
+                            dayBox.Text = dayBox.Text.Replace("✔", ""); // Poistaa merkin päivän tekstilaatikosta
+                            dayBox.SelectionAlignment = HorizontalAlignment.Center;
+                        }
+                    }
+                    prompt.Close();
+                };
+                prompt.Controls.Add(confirmation);
+                prompt.Controls.Add(textLabel);
+                prompt.Controls.Add(textBox);
+                prompt.ShowDialog();
+                return textBox.Text;
+            }
+        }
+
+        // Lataa päivän muistiinpanot tiedostosta
+        private void LoadDayNotesFromFile()
+        {
+            try
+            {
+                if (File.Exists(notesFilePath))
+                {
+                    using (StreamReader sr = new StreamReader(notesFilePath))
+                    {
+                        for (int i = 0; i < dayContents.Length; i++)
+                        {
+                            string note = sr.ReadLine();
+                            dayContents[i] = note;
+
+                            // Add checkmark to the RichTextBox if note is not empty
+                            if (!string.IsNullOrEmpty(note) && Controls.ContainsKey("day" + (i + 1)))
+                            {
+                                RichTextBox richTextBox = (RichTextBox)Controls["day" + (i + 1)];
+                                richTextBox.Text = richTextBox.Text + " ✔";
+                            }
+                        }
                     }
                 }
-                else
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error loading day notes: " + ex.Message);
+            }
+        }
+
+
+
+
+        // Tallentaa päivän muistiinpanot tiedostoon
+        private void SaveDayNotesToFile()
+        {
+            try
+            {
+                using (StreamWriter sw = new StreamWriter(notesFilePath))
                 {
-                    // Poistaa merkin päivän tekstilaatikosta, jos se on jo lisätty
-                    if (dayBox.Text.Contains("✔"))
+                    foreach (string note in dayContents)
                     {
-                        int index = dayBox.Text.IndexOf("✔");
-                        dayBox.Select(index, 1);
-                        dayBox.Text = dayBox.Text.Replace("✔", ""); // Poistaa merkin päivän tekstilaatikosta
-                        dayBox.SelectionAlignment = HorizontalAlignment.Center;
+                        sw.WriteLine(note);
                     }
                 }
-                prompt.Close();
-            };
-            prompt.Controls.Add(confirmation);
-            prompt.Controls.Add(textLabel);
-            prompt.Controls.Add(textBox);
-            prompt.ShowDialog();
-            return textBox.Text;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error saving day notes: " + ex.Message);
+            }
         }
     }
-
-
-
 }
