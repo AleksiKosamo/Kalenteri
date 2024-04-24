@@ -9,14 +9,20 @@ namespace Kalenteri_näyttötyö
     {
         private Timer timer; // Ajastin päivämäärän ja kellonajan päivittämiseen
         private DateTime currentDate; // Nykyinen päivämäärä
-        private string[] dayContents; // Taulukko päivien muistiinpanoille
+        private string[][] dayContents; // Taulukko päivien muistiinpanoille
         private string notesFilePath = "day_notes.txt"; // Tiedostopolku muistiinpanojen tallentamiseen
 
         public kalenteri()
         {
             InitializeComponent();
             currentDate = DateTime.Now; // Asetetaan nykyinen päivämäärä
-            dayContents = new string[31]; // Tehdään taulukko, joka tallentaa päivien muistiinpanot
+            dayContents = new string[12][]; // Tehdään taulukko, joka tallentaa päivien muistiinpanot eri kuukausille
+
+            // Alustetaan alitaulukot
+            for (int i = 0; i < 12; i++)
+            {
+                dayContents[i] = new string[31]; // Alustetaan taulukko, joka tallentaa päivien muistiinpanot yhdelle kuukaudelle
+            }
 
             // Ladataan päivän muistiinpanot tiedostosta
             LoadDayNotesFromFile();
@@ -132,25 +138,40 @@ namespace Kalenteri_näyttötyö
         // Asettaa nykyisen kuukauden tekstin näytölle
         private void SetCurrentMonthText()
         {
-            string currentMonthName = currentDate.ToString("MMMM");
+            string currentMonthName = currentDate.ToString("yyyy MMMM");
             currentMonth.Text = currentMonthName;
-
-            string currentYearName = currentDate.ToString("yyyy");
-            currentYear.Text = currentYearName;
         }
 
         // Luo navigointinapit edellisen ja seuraavan kuukauden vaihtamiseksi
         private void CreateMonthNavigationButtons()
         {
+            // Create previous month arrow button
             Button previousMonthButton = new Button();
-            previousMonthButton.Text = "<";
-            previousMonthButton.Location = new Point(currentMonth.Right + 10, currentMonth.Top);
+            previousMonthButton.Font = new Font("Arial", 26, FontStyle.Bold);
+            previousMonthButton.Text = "←";
+            previousMonthButton.FlatStyle = FlatStyle.Flat;
+            previousMonthButton.FlatAppearance.BorderSize = 0;
+            previousMonthButton.FlatAppearance.MouseOverBackColor = Color.Transparent; // Remove hovering highlight
+            previousMonthButton.FlatAppearance.MouseDownBackColor = Color.Transparent; // Remove click highlight
+            previousMonthButton.ForeColor = Color.White;
+            previousMonthButton.BackColor = Color.Transparent;
+            previousMonthButton.Size = new Size(40, 40);
+            previousMonthButton.Location = new Point(currentMonth.Left - 45, currentMonth.Top);
             previousMonthButton.Click += PreviousMonthButton_Click;
             this.Controls.Add(previousMonthButton);
 
+            // Create next month arrow button
             Button nextMonthButton = new Button();
-            nextMonthButton.Text = ">";
-            nextMonthButton.Location = new Point(previousMonthButton.Right + 10, currentMonth.Top);
+            nextMonthButton.Font = new Font("Arial", 26, FontStyle.Bold);
+            nextMonthButton.Text = "→";
+            nextMonthButton.FlatStyle = FlatStyle.Flat;
+            nextMonthButton.FlatAppearance.BorderSize = 0;
+            nextMonthButton.FlatAppearance.MouseOverBackColor = Color.Transparent; // Remove hovering highlight
+            nextMonthButton.FlatAppearance.MouseDownBackColor = Color.Transparent; // Remove click highlight
+            nextMonthButton.ForeColor = Color.White;
+            nextMonthButton.BackColor = Color.Transparent;
+            nextMonthButton.Size = new Size(40, 40);
+            nextMonthButton.Location = new Point(currentMonth.Right + 10, currentMonth.Top);
             nextMonthButton.Click += NextMonthButton_Click;
             this.Controls.Add(nextMonthButton);
         }
@@ -187,11 +208,11 @@ namespace Kalenteri_näyttötyö
                 DateTime selectedDate = new DateTime(currentDate.Year, currentDate.Month, day);
 
                 // Avaa ikkuna muistion kirjoittamiseen ja välittää päivän tekstilaatikko parametrina
-                string content = dayContents[day - 1]; // Haetaan sisältö taulukosta
+                string content = dayContents[currentDate.Month - 1][day - 1]; // Haetaan sisältö taulukosta nykyisen kuukauden osalta
                 string newContent = Prompt.ShowDialog("Syötä muistiinpano", content, clickedDay);
 
-                // Tallenna päivän sisältö taulukkoon
-                dayContents[day - 1] = newContent;
+                // Tallenna päivän sisältö taulukkoon nykyisen kuukauden osalta
+                dayContents[currentDate.Month - 1][day - 1] = newContent;
             }
         }
 
@@ -256,16 +277,19 @@ namespace Kalenteri_näyttötyö
                 {
                     using (StreamReader sr = new StreamReader(notesFilePath))
                     {
-                        for (int i = 0; i < dayContents.Length; i++)
+                        for (int i = 0; i < 12; i++)
                         {
-                            string note = sr.ReadLine();
-                            dayContents[i] = note;
-
-                            // Add checkmark to the RichTextBox if note is not empty
-                            if (!string.IsNullOrEmpty(note) && Controls.ContainsKey("day" + (i + 1)))
+                            for (int j = 0; j < 31; j++)
                             {
-                                RichTextBox richTextBox = (RichTextBox)Controls["day" + (i + 1)];
-                                richTextBox.Text = richTextBox.Text + " ✔";
+                                string note = sr.ReadLine();
+                                dayContents[i][j] = note;
+
+                                // Add checkmark to the RichTextBox if note is not empty
+                                if (!string.IsNullOrEmpty(note) && Controls.ContainsKey("day" + (j + 1)))
+                                {
+                                    RichTextBox richTextBox = (RichTextBox)Controls["day" + (j + 1)];
+                                    richTextBox.Text = richTextBox.Text + " ✔";
+                                }
                             }
                         }
                     }
@@ -278,8 +302,6 @@ namespace Kalenteri_näyttötyö
         }
 
 
-
-
         // Tallentaa päivän muistiinpanot tiedostoon
         private void SaveDayNotesToFile()
         {
@@ -287,9 +309,12 @@ namespace Kalenteri_näyttötyö
             {
                 using (StreamWriter sw = new StreamWriter(notesFilePath))
                 {
-                    foreach (string note in dayContents)
+                    for (int i = 0; i < 12; i++)
                     {
-                        sw.WriteLine(note);
+                        for (int j = 0; j < 31; j++)
+                        {
+                            sw.WriteLine(dayContents[i][j]);
+                        }
                     }
                 }
             }

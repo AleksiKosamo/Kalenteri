@@ -59,9 +59,8 @@
             this.day30 = new System.Windows.Forms.RichTextBox();
             this.day29 = new System.Windows.Forms.RichTextBox();
             this.day28 = new System.Windows.Forms.RichTextBox();
-            this.currentMonth = new System.Windows.Forms.Label();
             this.currentTime = new System.Windows.Forms.Label();
-            this.currentYear = new System.Windows.Forms.Label();
+            this.currentMonth = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
@@ -530,18 +529,6 @@
             this.day28.Text = "28";
             this.day28.ZoomFactor = 1.5F;
             // 
-            // currentMonth
-            // 
-            this.currentMonth.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.currentMonth.AutoSize = true;
-            this.currentMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 18F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currentMonth.ForeColor = System.Drawing.Color.White;
-            this.currentMonth.Location = new System.Drawing.Point(295, 35);
-            this.currentMonth.Name = "currentMonth";
-            this.currentMonth.Size = new System.Drawing.Size(79, 29);
-            this.currentMonth.TabIndex = 32;
-            this.currentMonth.Text = "label1";
-            // 
             // currentTime
             // 
             this.currentTime.AutoSize = true;
@@ -553,17 +540,17 @@
             this.currentTime.TabIndex = 33;
             this.currentTime.Text = "label1";
             // 
-            // currentYear
+            // currentMonth
             // 
-            this.currentYear.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.currentYear.AutoSize = true;
-            this.currentYear.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currentYear.ForeColor = System.Drawing.Color.White;
-            this.currentYear.Location = new System.Drawing.Point(315, 9);
-            this.currentYear.Name = "currentYear";
-            this.currentYear.Size = new System.Drawing.Size(70, 26);
-            this.currentYear.TabIndex = 34;
-            this.currentYear.Text = "label1";
+            this.currentMonth.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.currentMonth.AutoSize = true;
+            this.currentMonth.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.currentMonth.ForeColor = System.Drawing.Color.White;
+            this.currentMonth.Location = new System.Drawing.Point(280, 5);
+            this.currentMonth.Name = "currentMonth";
+            this.currentMonth.Size = new System.Drawing.Size(70, 26);
+            this.currentMonth.TabIndex = 34;
+            this.currentMonth.Text = "label1";
             // 
             // panel1
             // 
@@ -571,7 +558,7 @@
             this.panel1.BackColor = System.Drawing.Color.White;
             this.panel1.Location = new System.Drawing.Point(285, 34);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(125, 3);
+            this.panel1.Size = new System.Drawing.Size(133, 3);
             this.panel1.TabIndex = 35;
             // 
             // kalenteri
@@ -581,9 +568,8 @@
             this.BackColor = System.Drawing.Color.Black;
             this.ClientSize = new System.Drawing.Size(688, 345);
             this.Controls.Add(this.panel1);
-            this.Controls.Add(this.currentYear);
-            this.Controls.Add(this.currentTime);
             this.Controls.Add(this.currentMonth);
+            this.Controls.Add(this.currentTime);
             this.Controls.Add(this.day31);
             this.Controls.Add(this.day30);
             this.Controls.Add(this.day29);
@@ -656,9 +642,8 @@
         private System.Windows.Forms.RichTextBox day30;
         private System.Windows.Forms.RichTextBox day29;
         private System.Windows.Forms.RichTextBox day28;
-        private System.Windows.Forms.Label currentMonth;
         private System.Windows.Forms.Label currentTime;
-        private System.Windows.Forms.Label currentYear;
+        private System.Windows.Forms.Label currentMonth;
         private System.Windows.Forms.Panel panel1;
     }
 }
