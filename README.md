@@ -1,6 +1,6 @@
 # Kalenteri Näyttötyö
 
-# Varoius
+# Varoitus
 Sovelluksessa on bugi jota yritin korjata mutta, en oonnistunut siinä.
 
 ## Toiminnan Selvitys ja Käyttötarkoitus
