@@ -1,7 +1,7 @@
 # Kalenteri Näyttötyö
 
 # Varoitus
-Sovelluksessa on bugi jota yritin korjata mutta, en oonnistunut siinä.
+Sovelluksessa on bugi jota yritin korjata mutta, en onnistunut siinä.
 
 ## Toiminnan Selvitys ja Käyttötarkoitus
 
