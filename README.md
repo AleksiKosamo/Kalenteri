@@ -4,13 +4,6 @@
 
 Kalenteri Näyttötyö on yksinkertainen Windows-sovellus, jonka avulla käyttäjä voi pitää muistiinpanoja eri päivämääristä. Sovellus tarjoaa käyttäjälle kalenterinäkymän, jossa hän voi klikata päivämääriä ja lisätä niihin muistiinpanojaan. Pääkäyttötarkoitus on helpottaa päivittäisten tehtävien ja tapahtumien hallintaa.
 
-## Vuokaavio
-
-Sovelluksen toiminnasta ei ole saatavilla vuokaaviota tällä hetkellä.
-
-## Kuvakaappaukset
-
-Sovelluksen käyttöliittymän kuvakaappauksia ei ole saatavilla tällä hetkellä.
 
 ## Pääkohdat Koodista
 
