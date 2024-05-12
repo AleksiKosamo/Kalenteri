@@ -54,5 +54,4 @@ private void ShowDaysBasedOnCurrentMonth()
 - Mahdollisuus tallentaa muistiinpanot eri tiedostoihin eri käyttäjille.
 - Lisää muotoiluvaihtoehtoja muistiinpanojen sisällölle, kuten lihavointi, kursivointi jne.
 - Parempi virheenkäsittely ja lokitiedostot virhetilanteiden varalta.
-- Synkronointimahdollisuus muiden laitteiden kanssa.
 
