@@ -196,7 +196,9 @@ namespace Kalenteri_näyttötyö
             SetCurrentMonthText();
             ShowDaysBasedOnCurrentMonth();
             HighlightCurrentDay();
+            UpdateCheckmarksForCurrentMonth();
         }
+
 
         // Tuplaklikkauksen käsittelijä päiville
         private void day_MouseDoubleClick(object sender, MouseEventArgs e)
@@ -237,19 +239,19 @@ namespace Kalenteri_näyttötyö
                 Button confirmation = new Button() { Text = "OK", Left = 50, Width = 100, Top = 140 }; // Päivitetty sijainti
                 confirmation.Click += (sender, e) =>
                 {
-                    if (!string.IsNullOrEmpty(textBox.Text))
+                    string newText = textBox.Text.Trim();
+                    if (!string.IsNullOrEmpty(newText))
                     {
-                        // Lisää merkki päivän tekstilaatikkoon, jos muistiinpanolaatikossa on tekstiä
+                        // Insert the checkmark at the end of the existing text
                         if (!dayBox.Text.Contains("✔"))
                         {
-                            // Insert the checkmark at the end of the existing text
-                            dayBox.SelectionStart = dayBox.TextLength;
-                            dayBox.SelectedText = "✔";
+                            // Add the checkmark to the day's RichTextBox
+                            dayBox.AppendText(" ✔");
                         }
                     }
                     else
                     {
-                        // Poistaa merkin päivän tekstilaatikosta, jos se on jo lisätty
+                        // Remove the checkmark if it exists
                         if (dayBox.Text.Contains("✔"))
                         {
                             int index = dayBox.Text.IndexOf("✔");
@@ -268,6 +270,7 @@ namespace Kalenteri_näyttötyö
             }
         }
 
+
         // Lataa päivän muistiinpanot tiedostosta
         private void LoadDayNotesFromFile()
         {
@@ -284,11 +287,11 @@ namespace Kalenteri_näyttötyö
                                 string note = sr.ReadLine();
                                 dayContents[i][j] = note;
 
-                                // Add checkmark to the RichTextBox if note is not empty
-                                if (!string.IsNullOrEmpty(note) && Controls.ContainsKey("day" + (j + 1)))
+                                // Add checkmark to the RichTextBox if note is not empty and it belongs to the current month
+                                if (i == currentDate.Month - 1 && !string.IsNullOrEmpty(note) && Controls.ContainsKey("day" + (j + 1)))
                                 {
                                     RichTextBox richTextBox = (RichTextBox)Controls["day" + (j + 1)];
-                                    richTextBox.Text = richTextBox.Text + " ✔";
+                                    richTextBox.AppendText(" ✔");
                                 }
                             }
                         }
@@ -300,6 +303,43 @@ namespace Kalenteri_näyttötyö
                 MessageBox.Show("Error loading day notes: " + ex.Message);
             }
         }
+
+        // Päivittää ruksit nykyisen kuukauden muistiinpanoille
+        private void UpdateCheckmarksForCurrentMonth()
+        {
+            for (int i = 1; i <= 31; i++)
+            {
+                if (Controls.ContainsKey("day" + i))
+                {
+                    RichTextBox richTextBox = (RichTextBox)Controls["day" + i];
+                    int day = int.Parse(richTextBox.Name.Replace("day", ""));
+                    string note = dayContents[currentDate.Month - 1][day - 1];
+
+                    if (!string.IsNullOrEmpty(note))
+                    {
+                        // Add checkmark if there is text
+                        if (!richTextBox.Text.Contains("✔"))
+                        {
+                            richTextBox.AppendText("✔");
+                        }
+                    }
+                    else
+                    {
+                        // Remove checkmark if there is no text
+                        if (richTextBox.Text.Contains("✔"))
+                        {
+                            int index = richTextBox.Text.IndexOf("✔");
+                            richTextBox.Select(index, 1);
+                            richTextBox.Text = richTextBox.Text.Replace("✔", "");
+                            richTextBox.SelectionAlignment = HorizontalAlignment.Center;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
 
 
         // Tallentaa päivän muistiinpanot tiedostoon
